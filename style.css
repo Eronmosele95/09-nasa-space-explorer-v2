@@ -1,3 +1,4 @@
+style.css
 /* Global reset & box sizing */
 * {
   box-sizing: border-box;
@@ -50,28 +51,56 @@ h1 {
   padding: 0 20px;
 }
 
-/* Inputs and buttons */
-input[type="date"],
-button {
+/* Inputs */
+input[type="date"] {
   font-family: Arial, sans-serif;
   font-weight: normal;
-  color: #666;
-  padding: 10px 15px;
+  color: #333;
+  padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
   line-height: 1.4;
   width: 100%;
+  background: white;
 }
 
-/* Button specific */
+/* Buttons (NASA branding) */
 button {
-  background-color: #d3d3d3;
-  color: black;
+  font-family: Arial, sans-serif;
+  font-weight: 600;
+  color: #fff;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  line-height: 1.4;
+  width: 100%;
   cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
 }
-button:hover {
-  background-color: #bfbfbf;
+
+/* Primary: Get Space Images — NASA blue */
+#getImageBtn {
+  background: linear-gradient(180deg,#0b3d91 0%,#1957b5 100%);
+  box-shadow: 0 4px 10px rgba(11,61,145,0.18);
+}
+#getImageBtn:hover { background: linear-gradient(180deg,#083071 0%,#154f95 100%); transform: translateY(-1px); }
+#getImageBtn:focus { outline: 3px solid rgba(11,61,145,0.15); }
+
+/* Secondary: New fact — NASA red/warm accent */
+#newFactBtn {
+  background: linear-gradient(180deg,#d7382b 0%,#b82a22 100%);
+  box-shadow: 0 4px 10px rgba(215,56,43,0.16);
+}
+#newFactBtn:hover { background: linear-gradient(180deg,#bf2f24 0%,#9f221a 100%); transform: translateY(-1px); }
+#newFactBtn:focus { outline: 3px solid rgba(215,56,43,0.12); }
+
+/* Disabled state */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Stack horizontally on wider screens */
@@ -108,6 +137,12 @@ button:hover {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  /* start hidden for entrance animation */
+  opacity: 0;
+  transform: translateY(12px) scale(1);
+  transition: transform 300ms cubic-bezier(.2,.9,.2,1), box-shadow 200ms ease, opacity 300ms ease;
+  transform-origin: center;
+  will-change: transform, opacity;
 }
 
 /* Three columns on wider screens */
@@ -122,6 +157,22 @@ button:hover {
   height: 200px;
   object-fit: cover;
   border-radius: 4px;
+  transition: transform 240ms ease;
+}
+
+/* Hover effect: raise the card and slightly scale the image for a modern feel */
+.gallery-item:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.16);
+}
+.gallery-item:hover img {
+  transform: scale(1.03);
+}
+
+/* Shown state for entrance animation (added by JS with a small stagger) */
+.gallery-item.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 .gallery-item p {
@@ -141,4 +192,83 @@ button:hover {
 .placeholder-icon {
   font-size: 48px;
   margin-bottom: 20px;
+}
+
+/* Modal overlay & content */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease-in-out;
+}
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal-content {
+  background: #fff;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: auto;
+  border-radius: 8px;
+  position: relative;
+  padding: 18px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+.modal-close {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+.modal-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+.modal-title {
+  margin: 6px 0;
+  font-size: 20px;
+}
+.modal-explanation {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* Space fact banner shown above the gallery */
+.space-fact {
+  background: linear-gradient(90deg, #0b3d91, #1957b5);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 16px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}
+
+@media (min-width: 600px) {
+  .space-fact { font-size: 18px; }
+}
+
+/* Small transient status shown above the gallery (e.g. "Showing N images") */
+.gallery-status {
+  text-align: center;
+  margin-bottom: 8px;
+color: #333;
+  font-size: 14px;
 }
